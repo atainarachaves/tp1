@@ -2,8 +2,11 @@
 
 
 def metricas_processo(processo):
+    # turnaround = tempo total desde a chegada ate o fim (formula do enunciado)
     termino = processo.tempo_termino
     turnaround = None if termino is None else termino - processo.chegada
+    # espera na fila de prontos = turnaround menos o que ele realmente ocupou a CPU
+    # e menos o tempo que ficou bloqueado esperando I/O (tambem formula do enunciado)
     espera = None if turnaround is None else turnaround - processo.cpu_consumida - processo.tempo_bloqueado
     return {
         "pid": processo.pid,
@@ -19,6 +22,8 @@ def metricas_processo(processo):
 
 def metricas_gerais(processos):
     dados = [metricas_processo(processo) for processo in processos]
+    # so entram na media os processos que de fato terminaram (termino != None);
+    # um processo cortado pelo limite de UTs nao deveria distorcer a media
     concluidos = [item for item in dados if item["termino"] is not None]
     quantidade = len(concluidos)
     return {

@@ -8,7 +8,6 @@ from assembler import Assembler
 from process import Processo
 from scheduler import Scheduler
 
-
 def carregar_processos(configuracoes):
     processos = []
     for pid, configuracao in enumerate(configuracoes, 1):
@@ -34,8 +33,10 @@ def main():
     parser.add_argument("--programa", help="Executa um unico arquivo Assembly")
     parser.add_argument("--silencioso", action="store_true")
     parser.add_argument("--max-uts", type=int, default=10000)
+    
     args = parser.parse_args()
     base = os.path.dirname(__file__)
+
     if args.config:
         with open(args.config, "r", encoding="utf-8") as arquivo:
             configuracoes = json.load(arquivo)
@@ -50,6 +51,7 @@ def main():
              "arquivo": os.path.join(base, "programs", "teste2.asm")},
         ]
     def entrada_teclado(processo):
+        # usada pela CPU quando o programa executa SYSCALL 2 (leitura via teclado)
         while True:
             try:
                 return int(input(f"[{processo.nome}] Digite um valor inteiro (SYSCALL 2): "))
